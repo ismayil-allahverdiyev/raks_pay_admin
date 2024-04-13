@@ -19,7 +19,7 @@ class HomeController extends GetxController {
   }
 
   getTransactionRequest() async {
-    store.collection('transactions').get().then(
+    await store.collection('transactions').get().then(
       (QuerySnapshot querySnapshot) {
         for (var doc in querySnapshot.docs) {
           if (doc.exists) {
@@ -32,5 +32,9 @@ class HomeController extends GetxController {
         }
       },
     );
+    transactions.sort((a, b) => a.date.compareTo(b.date));
+    transactions = transactions.reversed.toList().obs;
+    transactions.refresh();
+    print(transactions.value[0].date.toString());
   }
 }

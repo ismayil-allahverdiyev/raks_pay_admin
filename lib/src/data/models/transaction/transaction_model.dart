@@ -7,10 +7,11 @@ String transactionModelToJson(TransactionModel data) =>
     json.encode(data.toJson());
 
 class TransactionModel {
-  int date;
+  DateTime date;
   String number;
   double totalAmount;
   String fromCountry;
+  String toCurrency;
   String phoneCode;
   String currency;
   int requestedAmount;
@@ -29,11 +30,12 @@ class TransactionModel {
     required this.id,
     required this.email,
     required this.toCountry,
+    required this.toCurrency,
   });
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) =>
       TransactionModel(
-        date: json["date"],
+        date: DateTime.fromMicrosecondsSinceEpoch(json["date"] * 1000),
         number: json["number"],
         totalAmount: json["totalAmount"]?.toDouble(),
         fromCountry: json["fromCountry"],
@@ -43,6 +45,7 @@ class TransactionModel {
         id: json["id"],
         email: json["email"],
         toCountry: json["toCountry"],
+        toCurrency: json["toCurrency"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -56,5 +59,6 @@ class TransactionModel {
         "id": id,
         "email": email,
         "toCountry": toCountry,
+        "toCurrency": toCurrency,
       };
 }
