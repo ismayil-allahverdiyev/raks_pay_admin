@@ -123,7 +123,7 @@ class Repository {
     );
   }
 
-  selectImage({required bool isFromGallery}) async {
+  selectImage() async {
     final ImagePicker picker = ImagePicker();
     var status1 = await Permission.photos.status;
     var status2 = await Permission.camera.status;
@@ -137,7 +137,7 @@ class Repository {
       await Permission.storage.request();
     }
     var image = (await picker.pickImage(
-      source: isFromGallery ? ImageSource.gallery : ImageSource.camera,
+      source: ImageSource.gallery,
       imageQuality: 20,
       preferredCameraDevice: CameraDevice.rear,
     ));
