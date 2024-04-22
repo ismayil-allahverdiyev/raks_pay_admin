@@ -249,6 +249,17 @@ class HomePage extends GetView<HomeController> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: ElevatedButton(
+              onPressed: () {
+                Get.toNamed(Routes.RATES);
+              },
+              child: const Text(
+                "Rates",
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:raks_pay_admin/src/bindings/rates/rates_bindings.dart';
+import 'package:raks_pay_admin/src/ui/rates/rates_page.dart';
 import '../bindings/app/app_bindings.dart';
 import '../bindings/home/home_bindings.dart';
 import '../bindings/reviews/reviews_bindings.dart';
@@ -23,6 +25,11 @@ class AppPages {
       name: Routes.REVIEWS,
       page: () => const ReviewsPage(),
       binding: ReviewsBinding(),
+    ),
+    GetPage(
+      name: Routes.RATES,
+      page: () => const RatesPage(),
+      binding: RatesBinding(),
     ),
   ];
 }

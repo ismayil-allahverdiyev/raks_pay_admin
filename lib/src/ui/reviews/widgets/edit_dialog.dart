@@ -71,26 +71,23 @@ class EditDialogWidget extends GetWidget<ReviewsController> {
                   ),
                   const SizedBox(height: 8),
                   CustomTextField(
-                    value: review.main,
                     hintText: 'Edit Main text',
                     controller: controller.mainTextController,
                   ),
                   const SizedBox(height: 8),
                   CustomTextField(
-                    value: review.title,
                     hintText: 'Edit rest of the title',
                     controller: controller.titleTextController,
                   ),
                   const SizedBox(height: 8),
                   CustomTextField(
-                    value: review.description,
                     hintText: 'Edit description text',
                     controller: controller.descriptionTextController,
                   ),
                   const SizedBox(height: 8),
                   ElevatedButton(
                     onPressed: () {
-                      controller.updateReview(review.id, review.image);
+                      controller.updateReview(review.id, review);
                     },
                     child: const Text("Update"),
                   ),
@@ -107,22 +104,20 @@ class EditDialogWidget extends GetWidget<ReviewsController> {
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
-    required this.value,
     required this.hintText,
     required this.controller,
   });
 
-  final String value;
   final String hintText;
   final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: value,
       style: const TextStyle(
         color: whiteColor,
       ),
+      controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(

@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:raks_pay_admin/src/controllers/reviews/reviews_controller.dart';
+import 'package:raks_pay_admin/src/ui/reviews/widgets/add_dialog.dart';
 import 'package:raks_pay_admin/src/ui/reviews/widgets/edit_dialog.dart';
 
 import '../theme/app_colors.dart';
@@ -13,6 +15,23 @@ class ReviewsPage extends GetView<ReviewsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: secondaryColor,
+        onPressed: () {
+          Get.dialog(
+            const AddDialogWidget(),
+          ).then((value) {
+            controller.selectedImage.value = null;
+            controller.mainTextController.clear();
+            controller.titleTextController.clear();
+            controller.descriptionTextController.clear();
+          });
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.black,
+        ),
+      ),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.black,
@@ -25,6 +44,48 @@ class ReviewsPage extends GetView<ReviewsController> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          Obx(
+            () {
+              return IconButton(
+                onPressed: () {
+                  controller.isSelectionOn.value =
+                      !controller.isSelectionOn.value;
+                },
+                icon: Icon(
+                  controller.isSelectionOn.value
+                      ? Icons.cancel
+                      : Icons.select_all,
+                  color:
+                      controller.isSelectionOn.value ? redColor : primaryColor,
+                ),
+              );
+            },
+          ),
+          Obx(
+            () {
+              return controller.isSelectionOn.value
+                  ? Obx(
+                      () {
+                        return IconButton(
+                          onPressed: () {
+                            controller.selectReviews();
+                          },
+                          icon: Icon(
+                            controller.selectedReviews.length == 3
+                                ? Icons.check_circle
+                                : Icons.check_circle_outline,
+                            color: controller.selectedReviews.length == 3
+                                ? primaryColor
+                                : redColor,
+                          ),
+                        );
+                      },
+                    )
+                  : const SizedBox();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -91,19 +152,18 @@ class ReviewsPage extends GetView<ReviewsController> {
                                       width: (Get.width - 40) * 0.01,
                                     ),
                                     SizedBox(
-                                      width: (Get.width - 40) * 0.05,
+                                      width: (Get.width - 40) * 0.09,
                                       child: IconButton(
                                         onPressed: () {
-                                          print("object");
+                                          controller.deleteReview(
+                                              controller.reviews[index].id);
+                                          // print("object");
                                         },
                                         icon: const Icon(
                                           Icons.delete,
                                           color: Colors.red,
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: (Get.width - 40) * 0.04,
                                     ),
                                   ],
                                 ),
@@ -116,21 +176,73 @@ class ReviewsPage extends GetView<ReviewsController> {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Get.dialog(
-                                      EditDialogWidget(
-                                        review: controller.reviews[index],
+                                Obx(
+                                  () {
+                                    return ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            controller.isSelectionOn.value &&
+                                                    controller.selectedReviews
+                                                        .contains(controller
+                                                            .reviews[index])
+                                                ? redColor
+                                                : primaryColor,
                                       ),
-                                    ).then((value) {
-                                      controller.selectedImage.value = null;
-                                      controller.mainTextController.clear();
-                                      controller.titleTextController.clear();
-                                      controller.descriptionTextController
-                                          .clear();
-                                    });
+                                      onPressed: () {
+                                        if (controller.isSelectionOn.value) {
+                                          if (controller.selectedReviews
+                                              .contains(
+                                                  controller.reviews[index])) {
+                                            controller.selectedReviews.remove(
+                                                controller.reviews[index]);
+                                          } else {
+                                            if (controller
+                                                    .selectedReviews.length ==
+                                                3) {
+                                              Get.snackbar("Error",
+                                                  "You can only select 3 reviews");
+                                              return;
+                                            }
+                                            controller.selectedReviews
+                                                .add(controller.reviews[index]);
+                                          }
+                                        } else {
+                                          controller.mainTextController.text =
+                                              controller.reviews[index].main;
+                                          controller.titleTextController.text =
+                                              controller.reviews[index].title;
+                                          controller.descriptionTextController
+                                                  .text =
+                                              controller
+                                                  .reviews[index].description;
+
+                                          Get.dialog(
+                                            EditDialogWidget(
+                                              review: controller.reviews[index],
+                                            ),
+                                          ).then((value) {
+                                            controller.selectedImage.value =
+                                                null;
+                                            controller.mainTextController
+                                                .clear();
+                                            controller.titleTextController
+                                                .clear();
+                                            controller.descriptionTextController
+                                                .clear();
+                                          });
+                                        }
+                                      },
+                                      child: Text(
+                                        controller.isSelectionOn.value
+                                            ? controller.selectedReviews
+                                                    .contains(controller
+                                                        .reviews[index])
+                                                ? "Remove"
+                                                : "Select"
+                                            : "Edit",
+                                      ),
+                                    );
                                   },
-                                  child: const Text("Edit"),
                                 ),
                               ],
                             ),

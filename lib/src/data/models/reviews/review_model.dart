@@ -10,8 +10,10 @@ class ReviewModel {
   DateTime date;
   String description;
   String image;
+  String name;
   String main;
   String title;
+  String from;
 
   ReviewModel({
     required this.id,
@@ -20,6 +22,8 @@ class ReviewModel {
     required this.image,
     required this.main,
     required this.title,
+    required this.name,
+    required this.from,
   });
 
   factory ReviewModel.fromJson(Map<String, dynamic> json) => ReviewModel(
@@ -30,6 +34,8 @@ class ReviewModel {
         image: json["image"],
         main: json["main"],
         title: json["title"],
+        name: json["name"],
+        from: json["from"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,5 +45,7 @@ class ReviewModel {
         "image": image,
         "main": main,
         "title": title,
+        "name": name,
+        "from": from,
       };
 }
